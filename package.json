@@ -1,0 +1,23 @@
+{
+  "name": "telegram_bot",
+  "version": "1.0.0",
+  "description": "node telegram bot",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.4",
+    "node-telegram-bot-api": "^0.56.0",
+    "selenium-webdriver": "^4.1.2"
+  }
+}
