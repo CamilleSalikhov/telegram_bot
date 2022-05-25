@@ -17,20 +17,29 @@ class User {
         return payload
     }
 
-     
+    // accountExist() {
+    //     console.log('method пошел')
+    //     const token = this.text.substring(7);
+    //     console.log(token);
+
+    //     function loginResult(token, secret) {
+    //         try {
+         
+    //      return true }
+    //          catch(err) {
+    //              console.log(err)
+    //              return false
+    //          }
+    //      }       
+
+    //      return loginResult(token, process.env.ACCESS_TOKEN_SECRET)
+    //         }
         } 
 
         
 
 
-    //     let loginresult = this.jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    //       console.log(user)
-    //         if (err) { 
-    //             return false
-    //             console.log('error!!')
-      
-    //   } else return true
-    //   });
+    
  
        
 
@@ -61,6 +70,31 @@ class User {
         }
   }
 
+  class UserChat {
+    constructor(loggedUser, chatId) { 
+        this.name = loggedUser.name;
+        this.password = loggedUser.password;
+        this.token = loggedUser.token; 
+        
+        this.chatId = chatId;
+    }
+    start() {
+        console.log(this.bot)
+          
+        }
+    getOrderList() {
+
+    }
+
+    createOrder() {
+
+    }
+  }
+
+
+
+
   module.exports.User = User;
   module.exports.Admin = Admin;
   module.exports.IgnUser = IgnUser;
+  module.exports.UserChat = UserChat;

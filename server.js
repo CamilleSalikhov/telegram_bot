@@ -1,7 +1,7 @@
 const {Builder, Browser, By, Key, until} = require('selenium-webdriver');
 const TelegramApi = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
-const {User, Admin, IgnUser} = require('./classes');
+const {User, Admin, IgnUser, UserChat} = require('./classes');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
@@ -29,15 +29,15 @@ bot.setMyCommands([
  
 bot.on(('message'), async msg => {
    
-     
+      
      
     const text = msg.text;
     const substring = text.split('_')[0]
-     
+    console.log(text.substring(9))
 
     const chatId = msg.chat.id;
     if (text === '/login') {
-      await  bot.sendMessage(chatId, 'Для входа отправьте свой токен в формате /token_вашТокен');
+      await  bot.sendMessage(chatId, 'Для входа отправьте свой токен в формате /token_<вашТокен>, где <вашТокен> это токен, который вы получили при регистрации и записали.');
     
     } else if (text === '/signup') {
         await  bot.sendMessage( chatId, "Гость, придумайте и введите свой логин и пароль в формате /newaccount_name_password");
@@ -63,17 +63,36 @@ bot.on(('message'), async msg => {
         let token = text.substring(7);
         console.log(token);
         let accountExist = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+          console.log(user)
           if (err) { return false;} else { return true }
-          req.user = user;
+
            
       });
 
       if (accountExist == false) {
-       bot.sendMessage(chatId, 'Такого аккаунта не существует!')
+       await bot.sendMessage(chatId, 'Такого аккаунта не существует!')
       } else { 
-        return bot.sendMessage(chatId, 'Добро пожаловать!');
-      }
-         
+       await bot.sendMessage(chatId, 'Добро пожаловать!');
+       let loggedUser = '';
+       allUsers.forEach( element => {
+         if (element.token === token) loggedUser = element;
+               });
+          
+       await bot.sendMessage(chatId, ' Напоминаем, что наш цветочный магазин предоставляет три варианта заказа: 1 - букет роз, 2 - букет лилий, 3 - букет тюльпанов. Запросить список ваших заказов можно с помощью /userorders_<token>. Создайте новый заказ с помощью /neworder_N_<token> , где N - Это число от 1 до 3, обозначающее вариант заказа.');
+              }
+          
+        } else if (substring == '/neworder') {
+          ///neworder_N_<token>
+          console.log(substring);
+          let orderOption = text
+
+
+
+
+
+
+
+
           
         } else {
         await  bot.sendMessage(chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации" );
