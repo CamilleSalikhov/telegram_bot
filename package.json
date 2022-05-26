@@ -4,7 +4,7 @@
   "description": "node telegram bot",
   "main": "server.js",
   "scripts": {
-    "start": "server.js",
+    "start": " node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js"
   },
