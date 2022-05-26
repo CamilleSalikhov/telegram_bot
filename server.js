@@ -30,7 +30,7 @@ let allUsers = [
 bot.setMyCommands([
     {command: '/login', description: 'Войти'},
     {command: '/signup', description: 'Зарегистрироваться '},
-    {command: '/loginadmin', description: 'Войти как админ '}
+    {command: '/start', description: 'Старт'}
  
 ]);
  
