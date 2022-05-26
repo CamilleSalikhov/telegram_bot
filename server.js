@@ -6,8 +6,11 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const {connectDB, Order} = require('./database');
 const uniqid = require('uniqid');
+const express = require('express');
 
- 
+ const app = express();
+
+ app.listen(3000, console.log('running'));
 
 connectDB();
 
@@ -257,3 +260,5 @@ bot.on(('message'), async msg => {
      
      
 })
+
+app.
