@@ -261,4 +261,3 @@ bot.on(('message'), async msg => {
      
 })
 
-app.
