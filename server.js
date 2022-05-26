@@ -73,6 +73,7 @@ bot.on(('message'), async msg => {
         console.log(token);
         let accountExist = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
           console.log(user)
+          console.log(user)
           if (err) { return false;} else { return true }
 
            
@@ -236,7 +237,7 @@ bot.on(('message'), async msg => {
         } else if(substring[0] == '/loginadmin') {
 
           if(text.substring(12) == adminToken) {
-            bot.sendMessage(chatId, 'Запросить список всех заказов можно с помощью запроса /getorders_<token> ; Удалить заказ по id можно с помошью запроса /deleteorder_id_token')
+            bot.sendMessage(chatId, 'Запросить список всех заказов можно с помощью запроса \n /getorders_<token>, где <token> - это токен администратора ; Удалить заказ по id можно с помощью запроса \n /deleteorder_id_<token>, где <token> - это токен администратора')
 
           } else {
             await bot.sendMessage(chatId, 'Ошибка! Неверный формат запроса или токен!')
