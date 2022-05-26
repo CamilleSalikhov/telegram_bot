@@ -5,8 +5,8 @@ const {User, Admin, IgnUser, UserChat} = require('./classes');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const {connectDB, Order} = require('./database');
-const uniqid = require('uniqid');
 const express = require('express');
+var crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,6 +14,8 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT,"0.0.0.0", console.log('running'));
 
 connectDB();
+
+
 
 
 
@@ -113,12 +115,13 @@ bot.on(('message'), async msg => {
               payload.order = orderOption;
               
            }    
-         } console.log(payload)
+         }  console.log(payload)
          if(userExists) {
           let today = new Date().toISOString().slice(0, 10);
-          console.log(today);
+           
           payload.date = today;
-          payload.id = uniqid();
+          payload.id = crypto.randomBytes(8).toString('hex');
+          console.log(payload);
           const createdOrder = new Order(payload);
           createdOrder.save()
           
@@ -182,7 +185,7 @@ bot.on(('message'), async msg => {
 
                for (let i =0; i <= orders.length -1; i++) {
                 console.log(orders[i]);
-                let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}";  `;
+                let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}";\n  `;
                 ordersString = ordersString + currentOrder;
               }
 

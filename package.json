@@ -19,7 +19,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.4",
     "node-telegram-bot-api": "^0.56.0",
-    "selenium-webdriver": "^4.1.2",
-    "uniqid": "^5.4.0"
+    "selenium-webdriver": "^4.1.2"
   }
 }
