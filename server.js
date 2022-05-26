@@ -4,6 +4,15 @@ const mongoose = require('mongoose');
 const {User, Admin, IgnUser, UserChat} = require('./classes');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const {connectDB, Order} = require('./database');
+const uniqid = require('uniqid');
+
+ 
+
+
+connectDB();
+
+
 
 
 //инициализация node-telegram-bot-api
@@ -32,8 +41,8 @@ bot.on(('message'), async msg => {
       
      
     const text = msg.text;
-    const substring = text.split('_')[0]
-    console.log(text.substring(9))
+    const substring = text.split('_')
+    //console.log(text.substring(9))
 
     const chatId = msg.chat.id;
     if (text === '/login') {
@@ -42,9 +51,9 @@ bot.on(('message'), async msg => {
     } else if (text === '/signup') {
         await  bot.sendMessage( chatId, "Гость, придумайте и введите свой логин и пароль в формате /newaccount_name_password");
            
-      } else if ( substring  === '/newaccount') {
+      } else if ( substring[0]  === '/newaccount') {
            let newUser = new User(text, jwt);
-           for (let i = 0 ; i<= allUsers.length ;i++) {
+           for (let i = 0 ; i<= allUsers.length -1 ;i++) {
              if (allUsers[i] && allUsers[i].name === newUser.name) {
               return await  bot.sendMessage(chatId, 'Имя существует, придумайте другое!' );
         
@@ -59,7 +68,7 @@ bot.on(('message'), async msg => {
        else if (text === '/start')  {
         await  bot.sendMessage( chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации")
       } 
-      else if (substring === '/token') { 
+      else if (substring[0] === '/token') { 
         let token = text.substring(7);
         console.log(token);
         let accountExist = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -78,14 +87,47 @@ bot.on(('message'), async msg => {
          if (element.token === token) loggedUser = element;
                });
           
-       await bot.sendMessage(chatId, ' Напоминаем, что наш цветочный магазин предоставляет три варианта заказа: 1 - букет роз, 2 - букет лилий, 3 - букет тюльпанов. Запросить список ваших заказов можно с помощью /userorders_<token>. Создайте новый заказ с помощью /neworder_N_<token> , где N - Это число от 1 до 3, обозначающее вариант заказа.');
+       await bot.sendMessage(chatId, ' Напоминаем, что наш цветочный магазин предоставляет три варианта заказа: 1 - букет роз, 2 - букет лилий, 3 - букет тюльпанов. Вы можете Создать новый заказ с помощью команды /neworder_N_<token> , где N - Это число от 1 до 3, обозначающее вариант заказа. Запросить список ваших заказов можно с помощью /getorders_<token>.');
               }
           
-        } else if (substring == '/neworder') {
+        } else if (substring[0] == '/neworder') {
           ///neworder_N_<token>
+          let payload = {};
           console.log(substring);
-          let orderOption = text
+          let orderOption = substring[1];
+          let token = text.substring(12);
+          console.log(token);
+          
+          let userExists = false;
+          for (let i = 0 ; i<= allUsers.length -1 ;i++) {
+            if (allUsers[i] && allUsers[i].token === token) {
+              //Делаем заказ, обращаемся к базе данных
+              payload = allUsers[i];
+              console.log('нашли токен!');
+              userExists = true;
+              payload.order = orderOption;
+              
+           }    
+         } console.log(payload)
+         if(userExists) {
+          let today = new Date().toISOString().slice(0, 10);
+          console.log(today);
+          payload.date = today;
+          payload.id = uniqid();
+          const createdOrder = new Order(payload);
+          createdOrder.save()
+          
 
+
+
+           await bot.sendMessage(chatId, 'Запись создана!' );
+
+
+
+
+         } else {
+           await bot.sendMessage(chatId, 'Ошибка! Неправильный формат запроса, или такого токена не существует!' );
+          }
 
 
 
@@ -94,6 +136,66 @@ bot.on(('message'), async msg => {
 
 
           
+        } else if (substring[0] == '/getorders') {
+          ///getorders_<token>
+
+          let token = text.substring(11);
+          let adminStatus = false;
+          let userExists = false;
+          let payload = {};
+          let ordersString = '';
+        
+            for (let i = 0 ; i<= allUsers.length -1 ;i++) {
+              if (allUsers[i] && allUsers[i].token === token) {
+                
+                payload = allUsers[i];
+                console.log('нашли токен!');
+                userExists = true;
+             }    
+           }
+
+           if (token == 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmFtZSIsInBhc3N3b3JkIjoicGFzc3dvcmQiLCJpYXQiOjE2NTM0NDI4MzR9.5OOOo14OELe1tQxx1K9K0V9aHj288ofb1rN2d9kLuDA' ) {
+             adminStatus = true;
+           }
+
+           if (userExists) {
+             if(adminStatus) {
+               const orders = await Order.find();
+               for (let i =0; i <= orders.length -1; i++) {
+                 console.log(orders[i]);
+                 let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}";  `;
+        ordersString = ordersString + currentOrder;
+               }
+
+               await bot.sendMessage(chatId, ordersString)
+
+
+             } else {
+               const orders = await Order.find({
+                 token: payload.token
+               })
+
+               for (let i =0; i <= orders.length -1; i++) {
+                console.log(orders[i]);
+                let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}";  `;
+                ordersString = ordersString + currentOrder;
+              }
+
+              await bot.sendMessage(chatId, ordersString)
+
+                
+             }
+
+
+           } else {
+             await bot.sendMessage(chatId, 'Вы не зарегестрированы!')
+           }
+
+
+
+
+
+
         } else {
         await  bot.sendMessage(chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации" );
       }    

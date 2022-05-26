@@ -19,3 +19,8 @@
      
       
     // }
+
+    for (let i = 0; i <= orders.length; i++) {
+        let currentOrder = `${orders[i].name}`+ ' заказал' + `${orders[i].order}` + ` ${orders[i].date} `;
+        ordersString = ordersString + currentOrder;
+      }
