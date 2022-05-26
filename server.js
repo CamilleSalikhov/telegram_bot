@@ -9,7 +9,6 @@ const uniqid = require('uniqid');
 
  
 
-
 connectDB();
 
 
@@ -18,7 +17,7 @@ connectDB();
 //инициализация node-telegram-bot-api
 const token = '5246682851:AAFkeEKZB83VqHEfk0FTGuQjtsHrD75BI6c';
 const bot = new TelegramApi(token, {polling:true});
-
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmFtZSIsInBhc3N3b3JkIjoicGFzc3dvcmQiLCJpYXQiOjE2NTM0NDI4MzR9.5OOOo14OELe1tQxx1K9K0V9aHj288ofb1rN2d9kLuDA';
 
 let allUsers = [
   {
@@ -30,7 +29,8 @@ let allUsers = [
 
 bot.setMyCommands([
     {command: '/login', description: 'Войти'},
-    {command: '/signup', description: 'Зарегистрироваться '} 
+    {command: '/signup', description: 'Зарегистрироваться '},
+    {command: '/loginadmin', description: 'Войти как админ '}
  
 ]);
  
@@ -46,7 +46,7 @@ bot.on(('message'), async msg => {
 
     const chatId = msg.chat.id;
     if (text === '/login') {
-      await  bot.sendMessage(chatId, 'Для входа отправьте свой токен в формате /token_<вашТокен>, где <вашТокен> это токен, который вы получили при регистрации и записали.');
+      await  bot.sendMessage(chatId, 'Для входа отправьте свой токен в формате \n /token_<вашТокен>, где <вашТокен> это токен, который вы получили при регистрации и записали.');
     
     } else if (text === '/signup') {
         await  bot.sendMessage( chatId, "Гость, придумайте и введите свой логин и пароль в формате /newaccount_name_password");
@@ -66,7 +66,7 @@ bot.on(('message'), async msg => {
         await  bot.sendMessage( chatId, "Здравствуйте, используйте команду /login для входа , команду /signup для регистрации");
       }
        else if (text === '/start')  {
-        await  bot.sendMessage( chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации")
+        await  bot.sendMessage( chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации. Для входа в систему от имени администратора использвуйте команду \n  /loginadmin_<token>, где <token> - это токен администратора")
       } 
       else if (substring[0] === '/token') { 
         let token = text.substring(7);
@@ -154,7 +154,7 @@ bot.on(('message'), async msg => {
              }    
            }
 
-           if (token == 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmFtZSIsInBhc3N3b3JkIjoicGFzc3dvcmQiLCJpYXQiOjE2NTM0NDI4MzR9.5OOOo14OELe1tQxx1K9K0V9aHj288ofb1rN2d9kLuDA' ) {
+           if (token == adminToken ) {
              adminStatus = true;
            }
 
@@ -163,7 +163,7 @@ bot.on(('message'), async msg => {
                const orders = await Order.find();
                for (let i =0; i <= orders.length -1; i++) {
                  console.log(orders[i]);
-                 let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}";  `;
+                 let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}", id "${orders[i].id}";\n`;
         ordersString = ordersString + currentOrder;
                }
 
@@ -196,9 +196,58 @@ bot.on(('message'), async msg => {
 
 
 
+        } else if (substring[0] == '/deleteorder') {
+         // /deleteorder_id_token
+          const token = text.substring(30);
+          const deleteId = substring[1];
+          console.log(`${token} - это токен`)
+          console.log(deleteId)
+
+          if (token == adminToken) {
+             
+
+            try {
+               await Order.deleteOne({
+               id: deleteId 
+              })
+          
+              await bot.sendMessage(chatId, 'Удалено!')
+            } catch(err) {
+              console.log(err)
+              await bot.sendMessage(chatId, 'Ошибка! Возможно, ошибка формата запроса!')
+          
+            }
+
+
+
+
+
+
+          } else {
+            await bot.sendMessage(chatId, 'Ошибка доступа, удаление доступно только администратору!')
+          }
+
+
+
+
+
+
+
+        } else if(substring[0] == '/loginadmin') {
+
+          if(text.substring(12) == adminToken) {
+            bot.sendMessage(chatId, 'Запросить список всех заказов можно с помощью запроса /getorders_<token> ; Удалить заказ по id можно с помошью запроса /deleteorder_id_token')
+
+          } else {
+            await bot.sendMessage(chatId, 'Ошибка! Неверный формат запроса или токен!')
+          }
+
+
+      
+      
         } else {
-        await  bot.sendMessage(chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации" );
-      }    
+        await  bot.sendMessage(chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации. Для входа в систему от имени администратора использвуйте команду \n /loginadmin_<token>, где <token> - это токен администратора" );
+        }    
          
     
      
