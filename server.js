@@ -9,11 +9,12 @@ const express = require('express');
 var crypto = require("crypto");
 const { Options } = require('selenium-webdriver/chrome');
 
+//для heroku
 const app = express();
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT,"0.0.0.0", console.log('running'));
 
+//mongo db соединение
 connectDB();
 
 
@@ -24,8 +25,10 @@ connectDB();
 //инициализация node-telegram-bot-api
 const token = '5246682851:AAFkeEKZB83VqHEfk0FTGuQjtsHrD75BI6c';
 const bot = new TelegramApi(token, {polling:true});
+//токен админа приложения
 const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmFtZSIsInBhc3N3b3JkIjoicGFzc3dvcmQiLCJpYXQiOjE2NTM0NDI4MzR9.5OOOo14OELe1tQxx1K9K0V9aHj288ofb1rN2d9kLuDA';
 
+//вспомогательный объект для условия IgnUser
 let ignoredChat = {
   prevMessage: '  ',
   id: '  '
@@ -49,17 +52,14 @@ bot.setMyCommands([
  
  
 bot.on(('message'), async msg => {
-  
-   
-      
-     
+
+  //локальные переменные
     const text = msg.text;
     const substring = text.split('_')
-    //console.log(text.substring(9))
     const chatId = msg.chat.id;
 
      
-      
+    //проверка игнюзер
     if (ignoredChat.prevMessage == '?' && text == '?' || ignoredChat.id ==chatId  ) {
       console.log('начинаем игнор!');
       ignoredChat.id = chatId;
@@ -75,13 +75,14 @@ bot.on(('message'), async msg => {
 
 
 
-    if (text === '/login') {
+    if (substring[0] == '/login') {
+      console.log(`${substring[0]} субстирнг`)
       await  bot.sendMessage(chatId, 'Для входа отправьте свой токен в формате \n /token_<вашТокен>, где <вашТокен> это токен, который вы получили при регистрации и записали.');
     
-    } else if (text === '/signup') {
+    } else if (substring[0] == '/signup') {
         await  bot.sendMessage( chatId, "Гость, придумайте и введите свой логин и пароль в формате /newaccount_name_password");
            
-      } else if ( substring[0]  === '/newaccount') {
+      } else if ( substring[0]  == '/newaccount') {
            let newUser = new User(text, jwt);
            for (let i = 0 ; i<= allUsers.length -1 ;i++) {
              if (allUsers[i] && allUsers[i].name === newUser.name) {
@@ -95,7 +96,7 @@ bot.on(('message'), async msg => {
         await  bot.sendMessage(chatId, `Успешная регистрация,${signedUser.name}! Ваш токен "${signedUser.token}", запишите его и не потеряйте! ` );
         await  bot.sendMessage( chatId, "Здравствуйте, используйте команду /login для входа , команду /signup для регистрации");
       }
-       else if (text === '/start')  {
+       else if (substring[0] === '/start')  {
         await  bot.sendMessage( chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации. Для входа в систему от имени администратора использвуйте команду \n  /loginadmin_<token>, где <token> - это токен администратора")
       } 
       else if (substring[0] === '/token') { 
