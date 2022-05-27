@@ -36,19 +36,7 @@ class User {
     //         }
         } 
 
-        
-
-
     
- 
-       
-
-
-    
-    
-     
-        
-
 
 
   class Admin {
@@ -94,34 +82,34 @@ class User {
   }
 
 
-  //фабрики
-
-  function userFactory() {
-      return new User(text, jwt)
-  }
-
-  function adminFactory() {
-      return new Admin(text);
-  }
-
-  function ignFactory() {
-      return new IgnUser(text)
-  }
+   
 
   // абстрактная фабрика
 
-  function userProducer( usertype ) {
-      if (usertype == 'user') {
-          return userFactory
-      } else if ( usertype == 'admin' ) {
-          return adminFactory 
-      } else if ( usertype == 'ignuser' ) {
-          return ignFactory
-      }
+  class UserFactory {
+    constructor(usertype) { 
+        this.usertype = usertype; 
+    }
+    userProducer() {
+        switch (this.usertype) {
+            case "user":
+                return new User();
+            case "admin":
+                return new Admin();
+            case "ignuser":
+                return new IgnUser();
+            default:
+                return null;
+        }
+    }
+
+
   }
 
 
+  
 
+ 
 
 
 
