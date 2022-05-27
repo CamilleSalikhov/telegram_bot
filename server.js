@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const {connectDB, Order} = require('./database');
 const express = require('express');
 var crypto = require("crypto");
+const { Options } = require('selenium-webdriver/chrome');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,7 +26,10 @@ const token = '5246682851:AAFkeEKZB83VqHEfk0FTGuQjtsHrD75BI6c';
 const bot = new TelegramApi(token, {polling:true});
 const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmFtZSIsInBhc3N3b3JkIjoicGFzc3dvcmQiLCJpYXQiOjE2NTM0NDI4MzR9.5OOOo14OELe1tQxx1K9K0V9aHj288ofb1rN2d9kLuDA';
 
-let thisChatPrevMessage = ' ';
+let ignoredChat = {
+  prevMessage: '  ',
+  id: '  '
+}
 
 let allUsers = [
   {
@@ -45,17 +49,32 @@ bot.setMyCommands([
  
  
 bot.on(('message'), async msg => {
-  if (thisChatPrevMessage == '?' && msg.text == '?' ) {
-    
-  }
+  
    
       
      
     const text = msg.text;
     const substring = text.split('_')
     //console.log(text.substring(9))
-
     const chatId = msg.chat.id;
+
+     
+      
+    if (ignoredChat.prevMessage == '?' && text == '?' || ignoredChat.id ==chatId  ) {
+      console.log('начинаем игнор!');
+      ignoredChat.id = chatId;
+      console.log(ignoredChat);
+      await bot.sendMessage(chatId, 'Ваш статус = IgnUser! Обратитесь к администратору! (для продолжения работы с ботом перезагрузите приложение или зайдите с другой учетной записи telegram)')
+      return
+      
+    } else {
+      ignoredChat.prevMessage = text;
+      console.log('не игнорируем!');
+      console.log(ignoredChat)
+    }
+
+
+
     if (text === '/login') {
       await  bot.sendMessage(chatId, 'Для входа отправьте свой токен в формате \n /token_<вашТокен>, где <вашТокен> это токен, который вы получили при регистрации и записали.');
     
