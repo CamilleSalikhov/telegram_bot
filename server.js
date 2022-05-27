@@ -25,6 +25,8 @@ const token = '5246682851:AAFkeEKZB83VqHEfk0FTGuQjtsHrD75BI6c';
 const bot = new TelegramApi(token, {polling:true});
 const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmFtZSIsInBhc3N3b3JkIjoicGFzc3dvcmQiLCJpYXQiOjE2NTM0NDI4MzR9.5OOOo14OELe1tQxx1K9K0V9aHj288ofb1rN2d9kLuDA';
 
+let thisChatPrevMessage = ' ';
+
 let allUsers = [
   {
   name: 'admin',
@@ -43,6 +45,9 @@ bot.setMyCommands([
  
  
 bot.on(('message'), async msg => {
+  if (thisChatPrevMessage == '?' && msg.text == '?' ) {
+    
+  }
    
       
      
