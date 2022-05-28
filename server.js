@@ -1,13 +1,11 @@
 const {Builder, Browser, By, Key, until} = require('selenium-webdriver');
 const TelegramApi = require('node-telegram-bot-api');
-const mongoose = require('mongoose');
-const {User, Admin, IgnUser, UserChat, MessageHandler, HandlerFactory, StartHandler} = require('./classes');
+const { MessageHandler, HandlerFactory} = require('./classes');
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
-const {connectDB, Order} = require('./database');
+const {connectDB} = require('./database');
 const express = require('express');
-var crypto = require("crypto");
 const { Options } = require('selenium-webdriver/chrome');
+
 
 //для heroku
 const app = express();

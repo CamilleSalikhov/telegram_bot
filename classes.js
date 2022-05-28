@@ -42,47 +42,14 @@ class User {
     
 
 
-  class Admin {
-    constructor(name) { 
-        this.name = name; 
-    }
-    sayHi() {
-         alert(this.name); 
-        }
-  }
+   
 
 
-  class IgnUser {
-    constructor(name) { 
-        this.name = name; 
-    }
-    sayHi() {
-         alert(this.name); 
-        }
-  }
+   
 
 
 
-  class UserChat {
-    constructor(loggedUser, chatId) { 
-        this.name = loggedUser.name;
-        this.password = loggedUser.password;
-        this.token = loggedUser.token; 
-        
-        this.chatId = chatId;
-    }
-    start() {
-        console.log(this.bot)
-          
-        }
-    getOrderList() {
-
-    }
-
-    createOrder() {
-
-    }
-  }
+   
 
 //--------------------------------------------------------------------------------------------------------
    
@@ -101,7 +68,7 @@ class User {
     }
     handleMessage() {
         console.log(this.handler)
-        console.log('реально получилось')
+        console.log('  получилось')
           return this.handler.handleMessage()
           
         
@@ -120,6 +87,7 @@ class User {
         this.handlerType = command; 
     }
     handlerProducer() {
+
         let handlerObject = {};
       switch (this.handlerType) {
         case '/login': { 
@@ -173,13 +141,6 @@ class User {
         break;
         }
     
-    
-    
-    
-    
-    
-    
-    
         default : {
             console.log('в дефолте')
             handlerObject = new DefaultHandler();
@@ -196,7 +157,8 @@ class User {
 
   }
 
-
+//-----------------------------------------------------------------------------------
+//классы хендлеров
   class StartHandler {
     constructor() {
 
@@ -273,6 +235,8 @@ return
     }
 
   }
+
+
 
   class NewOrderHandler {
     constructor() {
@@ -364,6 +328,8 @@ return
 
   }
 
+
+
   class LoginHandler {
     constructor() {
 
@@ -376,6 +342,7 @@ return
     }
 
   }
+
 
 
   class GetOrdersHandler {
@@ -449,6 +416,8 @@ return
   }
 
 
+
+
   class SignUpHandler {
     constructor() {
 
@@ -460,6 +429,8 @@ return
     }
 
   }
+
+
 
 
   class LoginAdminHandler {
@@ -482,6 +453,8 @@ return
     }
 
   }
+
+  
 
   class NewAccountHandler {
     constructor() {
@@ -519,11 +492,7 @@ return
 
 
 
-  module.exports.User = User;
-  module.exports.Admin = Admin;
-  module.exports.IgnUser = IgnUser;
-  module.exports.UserChat = UserChat;
+  
   module.exports.MessageHandler = MessageHandler;
   module.exports.HandlerFactory = HandlerFactory;
-  module.exports.StartHandler = StartHandler;
-   
+  
