@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 var crypto = require("crypto");
 const {connectDB, Order} = require('./database');
 
+
+
 class User {
     constructor(text, jwt) { 
         this.name = text.split('_')[1];
@@ -20,29 +22,8 @@ class User {
         return payload
     }
 
-    // accountExist() {
-    //     console.log('method пошел')
-    //     const token = this.text.вы не(7);
-    //     console.log(token);
-
-    //     function loginResult(token, secret) {
-    //         try {
-         
-    //      return true }
-    //          catch(err) {
-    //              console.log(err)
-    //              return false
-    //          }
-    //      }       
-
-    //      return loginResult(token, process.env.ACCESS_TOKEN_SECRET)
-    //         }
-        } 
-
     
-
-
-   
+        } 
 
 
    
@@ -454,7 +435,7 @@ return
 
   }
 
-  
+
 
   class NewAccountHandler {
     constructor() {
