@@ -32,7 +32,8 @@ global.adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmFtZSIsIn
 //вспомогательный объект для условия IgnUser
 let ignoredChat = {
   prevMessage: '  ',
-  id: '  '
+  id: '  ',
+  date: 'first'
 }
 
 global.allUsers = [
@@ -59,6 +60,24 @@ bot.on(('message'), async msg => {
   global.chatId = msg.chat.id;
 
   console.log(`${new Date()} новая дата` )
+
+
+  //времени с последнего сообщения
+  if(ignoredChat.date == 'first') {
+    console.log('Первое сообщение!');
+    ignoredChat.date = new Date();
+
+  } else {
+    let sicnceLastMessage = new Date() - ignoredChat.date; // in ms
+    sicnceLastMessage /= 1000;
+    
+    let seconds = Math.round(sicnceLastMessage);
+    console.log(`С отправки последнего сообщения прошло ${seconds} секунд`)
+  }
+
+
+
+
   
   //проверка игнюзер
   if (ignoredChat.prevMessage == '?' && text == '?' || ignoredChat.id ==chatId  ) {
