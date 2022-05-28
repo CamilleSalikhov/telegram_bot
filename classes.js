@@ -1,7 +1,7 @@
 const { logging } = require("selenium-webdriver");
 const jwt = require('jsonwebtoken');
 var crypto = require("crypto");
-const {connectDB, Order} = require('./database');
+const { Order} = require('./database');
 
 
 
@@ -9,13 +9,15 @@ class User {
     constructor(text, jwt) { 
         this.name = text.split('_')[1];
         this.password = text.split('_')[2]; 
+        this.phoneNumber = text.split('_')[3]; 
         this.jwt = jwt;
         this.text =text;
     }
     signUp() {
         let payload = {
             name:this.name,
-            password:this.password
+            password:this.password,
+            phoneNumber: this.phoneNumber
         }
         const accessToken = this.jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
         payload.token = accessToken;
@@ -358,7 +360,7 @@ return
              const orders = await Order.find();
              for (let i =0; i <= orders.length -1; i++) {
                console.log(orders[i]);
-               let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}", id "${orders[i].id}";\n`;
+               let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}", id "${orders[i].id}", номер телефона: "${orders[i].phoneNumber}";\n`;
         ordersString = ordersString + currentOrder;
              }
 
@@ -372,7 +374,7 @@ return
 
              for (let i =0; i <= orders.length -1; i++) {
               console.log(orders[i]);
-              let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}";\n  `;
+              let currentOrder = `Пользователь "${orders[i].name}" ` + `заказал вариант "${orders[i].order}", ` + `дата: "${orders[i].date}"; \n  `;
               ordersString = ordersString + currentOrder;
             }
 
@@ -405,7 +407,7 @@ return
     }
     
     async handleMessage() {
-    await bot.sendMessage( chatId, "Гость, придумайте и введите свой логин и пароль в формате /newaccount_name_password");
+    await bot.sendMessage( chatId, "Гость, придумайте и введите свой логин и пароль в формате /newaccount_name_password_phoneNumber");
          return  
     }
 

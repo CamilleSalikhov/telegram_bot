@@ -7,6 +7,8 @@ const express = require('express');
 const { Options } = require('selenium-webdriver/chrome');
 
 
+
+
 //для heroku
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -56,7 +58,8 @@ bot.on(('message'), async msg => {
   global.substringg = text.split('_')
   global.chatId = msg.chat.id;
 
-     
+  console.log(`${new Date()} новая дата` )
+  
   //проверка игнюзер
   if (ignoredChat.prevMessage == '?' && text == '?' || ignoredChat.id ==chatId  ) {
     console.log('начинаем игнор!');
@@ -73,6 +76,8 @@ bot.on(('message'), async msg => {
 
 
     //if (substring[0] == '/login')
+
+    //основная часть
 
     let messageHandler = new MessageHandler();
     let handlerObject = new HandlerFactory(substringg[0]).handlerProducer();

@@ -24,7 +24,8 @@ const orderSchema = new mongoose.Schema({
   token: String,
   order: String,
   date: String,
-  id: String
+  id: String,
+  phoneNumber: String
 });
 
 const Order = mongoose.model('Order', orderSchema);
