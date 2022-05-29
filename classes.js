@@ -51,7 +51,7 @@ class User {
     }
     handleMessage() {
         console.log(this.handler)
-        console.log('  получилось')
+        console.log('хендл месседж')
           return this.handler.handleMessage()
           
         
@@ -85,12 +85,12 @@ class User {
     
         case  '/newaccount': {
             handlerObject = new NewAccountHandler();
-            console.log('сломались?')
+            console.log('нью аккаунт')
         break;
          }
     
         case '/start': {
-            console.log('привет из фабрики')
+            console.log('ствртхендлер')
             handlerObject = new StartHandler();
              
         break;
@@ -211,7 +211,7 @@ return
     }
     
     async handleMessage() {
-        console.log('доходим почти до конца!')
+         
     await bot.sendMessage(chatId, "Здравствуйте, гость, используйте команду /login для входа , команду /signup для регистрации. Для входа в систему от имени администратора использвуйте команду \n /loginadmin_<token>, где <token> - это токен администратора" );
             
         return  
