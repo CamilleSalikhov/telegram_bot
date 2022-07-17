@@ -12,7 +12,7 @@ const { Options } = require('selenium-webdriver/chrome');
 //для heroku
 const app = express();
 app.get('/', (req, res) => {
-res.send('<h1>Бот запущен</h1>')
+res.send('<p>Бот начал работу</p>')
 
 });
 const PORT = process.env.PORT || 5000;
