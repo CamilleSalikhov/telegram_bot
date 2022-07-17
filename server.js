@@ -11,6 +11,10 @@ const { Options } = require('selenium-webdriver/chrome');
 
 //для heroku
 const app = express();
+app.get('/', (req, res) => {
+res.send('<h1>Бот запущен</h1>')
+
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,"0.0.0.0", console.log('running'));
 
